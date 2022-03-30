@@ -1,5 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
+require("hardhat-watcher");
 
 require("dotenv").config();
 
@@ -27,5 +28,12 @@ module.exports = {
         runs: 200,
       },
     },
+  },
+  watcher: {
+    compilation: {
+      tasks: ["compile"],
+      files: ["./contracts"],
+      verbose: true
+    }
   }
 };

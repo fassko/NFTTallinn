@@ -14,7 +14,7 @@ const main = async () => {
 
   console.log("NFT Tallinn ticket deployed:", nftTallinnTicket.address);
 
-  await nftTallinnTicket.createTicket(addr1.address, 1, "http://nfttallinn.ee");
+  await nftTallinnTicket.createTicket(addr1.address, 1, "https://bafybeigsc6eqcgxkevnvxcvbdpdmecxsn4vteio4kd5tsdiubjj2ohmysu.ipfs.dweb.link/");
 
   const myTicket = await nftTallinnTicket.connect(addr1).getMyTickets();
   console.log(myTicket);

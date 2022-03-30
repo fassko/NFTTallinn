@@ -11,6 +11,7 @@
     "hardhat": "^2.9.1"
   },
   "dependencies": {
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "hardhat-watcher": "^2.1.1"
   }
 }
