@@ -30,20 +30,26 @@ struct Ticket {
     TicketType ticketType; // enum - 0, 1, 2
 }
 
+// Storage for URLS where NFT metadata is saved
+// Get import
+
+// Ownable - someone who deployed the contract can access it
 contract NFTTallinnTicket is ERC721URIStorage, Ownable {
+
   // token ID counter, starts with 0 when initialized, default value
-  uint256 private tokenId;
+  uint256 private tokenId; // = 0;
 
   // keeping track of addresses that has ticket
   // 0x3FD0E5b04c1191629ecCe9e3BD62BFF97e1367BC => { ID, TICKET_TYPE }
   mapping(address => Ticket) private tickets;
 
+  // !! can show if we have time
   modifier ticketExists(address _address) {
     require(tickets[_address].id != 0, "Ticket does not exist!");
     _;
   }
 
-  // called when smart contract is being created
+  // called when smart contract is being deployed on the chain
   constructor(
       string memory eventName,
       string memory shortName
@@ -51,10 +57,11 @@ contract NFTTallinnTicket is ERC721URIStorage, Ownable {
       // initializes the NFT token contract
   }
 
+  // creating the ticket function
   function createTicket(
       address visitor, // address of the visitor
       TicketType ticketType, // which tiket type
-      string memory tokenURI // token metadata
+      string memory tokenURI // token metadata from IPFS
   ) public onlyOwner returns (uint256) {
     // can call person who deployed this contract
 
@@ -62,9 +69,11 @@ contract NFTTallinnTicket is ERC721URIStorage, Ownable {
     tokenId++;
 
     // mint the NFT and assign to the visitor address
+    // ERC-721 standard
     _mint(visitor, tokenId);
 
     // set the token JSON file link that was uploaded to the IPFS
+    // show how to upload with NFT Storage or Pinata
     _setTokenURI(tokenId, tokenURI);
 
     tickets[visitor] = Ticket({
@@ -77,14 +86,15 @@ contract NFTTallinnTicket is ERC721URIStorage, Ownable {
   }
 
   // ticket holder can call this
-  function getMyTickets() external view returns (Ticket memory) {
+  function getMyTicket() external view returns (Ticket memory) {
     // check if ticket exists
     require(tickets[msg.sender].id != 0, "Ticket does not exist!");
 
     return tickets[msg.sender];
   }
 
-  // ticket holder can call this
+  // ticket holder can call this to sell ticket to someone else
+  // here we don't have money transfers involved for sake of simplicity but that can be a homework
   function sellTicket(address to) external {
     // check again if ticket exists
     // can extract to the modifier
@@ -94,15 +104,16 @@ contract NFTTallinnTicket is ERC721URIStorage, Ownable {
     uint256 ticketId = tickets[msg.sender].id;
 
     // transfer to new owner the NFT
+    // ERC-721
     safeTransferFrom(msg.sender, to, ticketId);
 
-    // assign ticket to the new owner 
+    // assign ticket to the new owner
+    // important otherwise this screws up everything
     tickets[to] = tickets[msg.sender];
 
-    // delete old ticket
+    // delete old ticket from the register
     delete tickets[msg.sender];
   }
-
 
   // visitor shows their metamask wallet QR code
   // after scanning QR code check the entrance with the ticket ID and address
@@ -112,11 +123,15 @@ contract NFTTallinnTicket is ERC721URIStorage, Ownable {
       onlyOwner
       returns(bool)
   {
+    // only owner of the contract can do this
+
     // check if ticket exists
     require(tickets[_address].id != 0, "Ticket does not exist!");
 
+    // get the ticket id
     uint256 ticketId = tickets[_address].id;
 
+    // check if can enter
     return ownerOf(ticketId) == _address;
   }
 }
