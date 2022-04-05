@@ -1,12 +1,12 @@
 const hre = require("hardhat");
 
 const main = async () => {
-  const NFTTallinnTicket = await hre.ethers.getContractFactory("NFTTallinnTicket");
-  const nftTallinnTicket = await NFTTallinnTicket.deploy("NFTTallinn", "NFTTLN");
+  const NFTTallinn = await hre.ethers.getContractFactory("NFTTallinn");
+  const nftTallinn = await NFTTallinn.deploy("NFTTallinn", "NFTTLN");
 
-  await nftTallinnTicket.deployed();
+  await nftTallinn.deployed();
 
-  console.log("NFT Tallinn ticket deployed:", nftTallinnTicket.address);
+  console.log("NFT Tallinn ticket deployed:", nftTallinn.address);
 };
 
 main()

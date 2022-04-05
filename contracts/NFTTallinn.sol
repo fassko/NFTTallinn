@@ -34,7 +34,7 @@ struct Ticket {
 // Get import
 
 // Ownable - someone who deployed the contract can access it
-contract NFTTallinnTicket is ERC721URIStorage, Ownable {
+contract NFTTallinn is ERC721URIStorage, Ownable {
 
   // token ID counter, starts with 0 when initialized, default value
   uint256 private tokenId; // = 0;
